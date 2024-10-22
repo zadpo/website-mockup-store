@@ -8,7 +8,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function SignIn({ onClose }: { onClose: () => void }) {
+export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
@@ -54,7 +54,6 @@ export default function SignIn({ onClose }: { onClose: () => void }) {
         await signInWithEmailAndPassword(auth, email, password);
         console.log("User signed in successfully");
       }
-      onClose();
     } catch (error) {
       console.error("Error in authentication:", error);
       if (isSignUp) {
