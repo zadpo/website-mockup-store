@@ -1,12 +1,10 @@
 "use client";
-/* eslint-disable */
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { auth, db } from "../../../firebase";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, AuthError } from "firebase/auth";
+import { doc, getDoc, setDoc, FirestoreError } from "firebase/firestore";
+import { Button2 } from "@/components/ui/Button2";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -14,17 +12,16 @@ export default function SignIn() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: FormEvent) => {
+    if (e) e.preventDefault();
     setError("");
+    console.log("Attempting to", isSignUp ? "sign up" : "sign in", "with email:", email);
     try {
       if (isSignUp) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
         console.log("User account created:", user.uid);
 
-        // Create a user document in Firestore
         try {
           await setDoc(doc(db, "users", user.uid), {
             email: user.email,
@@ -32,14 +29,12 @@ export default function SignIn() {
           });
           console.log("User document created in Firestore");
 
-          // Create an empty cart subcollection
           await setDoc(doc(db, "users", user.uid, "cart", "info"), {
             itemCount: 0,
             total: 0,
           });
           console.log("Cart info document created in Firestore");
 
-          // Verify that the document was created
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
             console.log("User document verified:", userDoc.data());
@@ -48,7 +43,7 @@ export default function SignIn() {
           }
         } catch (firestoreError) {
           console.error("Error creating Firestore documents:", firestoreError);
-          setError("Failed to create user profile. Please try again.");
+          setError(`Failed to create user profile: ${(firestoreError as FirestoreError).message}`);
         }
       } else {
         await signInWithEmailAndPassword(auth, email, password);
@@ -56,40 +51,52 @@ export default function SignIn() {
       }
     } catch (error) {
       console.error("Error in authentication:", error);
-      if (isSignUp) {
-        setError("Failed to create account. Please try again.");
-      } else {
-        setError("Failed to sign in. Please check your credentials and try again.");
-      }
+      setError(`Authentication error: ${(error as AuthError).message}`);
     }
   };
 
   return (
-    <div className="w-full max-w-md">
-      <h2 className="text-2xl font-bold mb-4">{isSignUp ? "Create Account" : "Sign In"}</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button type="submit" className="w-full">
-          {isSignUp ? "Sign Up" : "Sign In"}
-        </Button>
-      </form>
-      <Button variant="link" onClick={() => setIsSignUp(!isSignUp)} className="mt-4 w-full">
-        {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
-      </Button>
+    <div className="py-20">
+      <div className="w-full max-w-md bg-stone-50 p-8 container mx-auto border border-black">
+        <h2 className="text-4xl font-gradualSemibold mb-6 text-[#403A34] items-center justify-center flex">
+          {isSignUp ? "CREATE ACCOUNT" : "SIGN IN"}
+        </h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#403A34]"
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#403A34]"
+            />
+          </div>
+          <Button2
+            frontText={isSignUp ? "Sign Up" : "Sign In"}
+            topText={isSignUp ? "Sign Up" : "Sign In"}
+            className="mx-auto"
+            onClick={() => handleSubmit()}
+          />
+        </form>
+        <button
+          onClick={() => setIsSignUp(!isSignUp)}
+          className="mt-10 w-full text-[#403A34] hover:underline font-gradualSemibold"
+        >
+          {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
+        </button>
+      </div>
     </div>
   );
 }

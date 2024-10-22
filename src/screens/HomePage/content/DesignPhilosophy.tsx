@@ -33,7 +33,7 @@ export function DesignPhilosophy() {
   }, [controls]);
 
   return (
-    <section className="pb-10">
+    <section className="">
       <div className="flex flex-col px-4 border border-black py-16">
         <motion.h2
           animate={false} // replace it with "controls" to see the animation

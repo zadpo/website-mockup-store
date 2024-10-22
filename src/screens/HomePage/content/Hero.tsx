@@ -25,22 +25,40 @@ export function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Simulate loading delay
+    const loadingTimer = setTimeout(() => setIsLoading(false), 1500);
+
     const timer = setInterval(() => {
       setIsTransitioning(true);
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
         setNextIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
         setIsTransitioning(false);
-      }, 1000); // Match this with the transition duration
+      }, 2000); // Match this with the transition duration
     }, 5000); // Change image every 5 seconds
 
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(loadingTimer);
+      clearInterval(timer);
+    };
   }, []);
 
   const currentImage = heroImages[currentIndex];
   const nextImage = heroImages[nextIndex];
+
+  if (isLoading) {
+    return (
+      <div className="relative h-[400px] sm:h-[600px] md:h-[800px] overflow-hidden border-b border-l border-r border-black bg-gray-300 animate-pulse">
+        <div className="absolute inset-0 bg-black bg-opacity-10 flex flex-col justify-end items-start border-2 pl-4 sm:pl-6 md:pl-10">
+          <div className="bg-gray-400 h-4 w-1/4 mb-2"></div>
+          <div className="bg-gray-400 h-16 w-3/4"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-[400px] sm:h-[600px] md:h-[800px] overflow-hidden border-b border-l border-r border-black">

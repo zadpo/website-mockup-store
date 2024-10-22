@@ -4,13 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../../firebase";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -42,7 +35,7 @@ export default function Header() {
   return (
     <header>
       <div className="border border-black">
-        <div className="container mx-auto px-4">
+        <div className="lg:pl-10 md:pl-4 pl-4 mx-auto">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="text-3xl font-bold font-gradualBold">
               GOODMOOD
@@ -76,20 +69,12 @@ export default function Header() {
                 ))}
               </ul>
               {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Avatar className="cursor-pointer">
-                      <AvatarImage src={user.photoURL || undefined} alt={user.email || "User avatar"} />
-                      <AvatarFallback>{user.email?.[0].toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <span className="font-medium">{user.email}</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center h-full px-4 border-r border-black hover:bg-gray-100 transition-colors font-gradualSemibold"
+                >
+                  SIGN OUT
+                </button>
               ) : (
                 <Link
                   href="/signin"
@@ -109,7 +94,7 @@ export default function Header() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden border-t border-black"
+            className="md:hidden border border-black border-t-0"
           >
             <nav className="container mx-auto px-4 py-2">
               <ul className="flex flex-col">
@@ -133,7 +118,7 @@ export default function Header() {
                       }}
                       className="block w-full text-left py-2 hover:bg-gray-100 transition-colors font-gradualSemibold"
                     >
-                      Sign Out
+                      SIGN OUT
                     </button>
                   </li>
                 ) : (

@@ -1,5 +1,5 @@
 import { ProductList } from "@/components/product/product-list";
-import { db } from "../../../../firebase";
+import { db } from "../../../firebase";
 import { collection, query, getDocs } from "firebase/firestore";
 import { Suspense } from "react";
 

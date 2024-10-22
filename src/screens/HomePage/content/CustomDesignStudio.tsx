@@ -19,7 +19,7 @@ export function CustomDesignStudio() {
   };
 
   return (
-    <section className="bg-stone-50 py-16">
+    <section className="bg-stone-50">
       <div className="container mx-auto px-4">
         <h2 className="mb-8 text-center text-3xl font-light text-stone-800">Custom Design Studio</h2>
         <div className="grid gap-8 md:grid-cols-2">

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/ui/layout/header";
 import { Toaster } from "@/components/ui/toaster";
+import Footer from "@/components/ui/layout/footer";
+import TermsAndConditionsPopup from "@/components/ui/layout/terms-and-conditions-popup";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +20,9 @@ export default function RootLayout({
       <body className={`flex flex-col font-inter bg-[#F6F1EB] lg:px-20 md:px-6 px-4 pt-10`}>
         <Header />
         {children}
+        <TermsAndConditionsPopup />
         <Toaster />
+        <Footer />
       </body>
     </html>
   );

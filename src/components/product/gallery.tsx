@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button2 } from "../ui/Button2";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const products = [
   { src: "/uploads/bonaparte_canape-1920x1536.webp", name: "Bonaparte Sofa", price: "$1,299" },
@@ -15,6 +15,33 @@ const products = [
 
 export function Gallery() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading delay
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="py-10">
+        <div className="animate-pulse mb-24">
+          <div className="bg-gray-300 h-12 w-3/4"></div>
+        </div>
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, index) => (
+            <div key={index} className="animate-pulse">
+              <div className="bg-gray-300 h-72 w-full"></div>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-center py-12">
+          <div className="bg-gray-300 h-10 w-40"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-10">
@@ -26,7 +53,7 @@ export function Gallery() {
       >
         <div className="pr-[264px] flex">
           <h2 className="text-3xl font-gradualBold font-light leading-tight text-[#403A34] md:text-4xl lg:text-5xl">
-            GOODWOOD, DESIGN SUSTAINABLE AND UNIQUE FURNITURE MADE IN THE PHILIPPINES.
+            GOODMOOD, DESIGN SUSTAINABLE AND UNIQUE FURNITURE MADE IN THE PHILIPPINES.
           </h2>
         </div>
       </motion.div>

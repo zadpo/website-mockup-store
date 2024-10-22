@@ -19,9 +19,13 @@ interface ProductListProps {
 
 export function ProductList({ products }: ProductListProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     console.log("Products:", products);
+    // Simulate loading delay
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
   }, [products]);
 
   const getImageUrl = (product: Product) => {
@@ -33,6 +37,20 @@ export function ProductList({ products }: ProductListProps) {
     console.log(`Image URL for product ${product.id}:`, url);
     return url;
   };
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 py-10">
+        {[...Array(10)].map((_, index) => (
+          <div key={index} className="animate-pulse">
+            <div className="bg-gray-300 aspect-square w-full"></div>
+            <div className="mt-2 bg-gray-300 h-4 w-3/4"></div>
+            <div className="mt-1 bg-gray-300 h-4 w-1/4"></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 py-10">
@@ -47,7 +65,6 @@ export function ProductList({ products }: ProductListProps) {
           onMouseLeave={() => setHoveredIndex(null)}
         >
           <Link
-            key={product.id}
             href={`/products/${product.id}`}
             className="group  overflow-hidden hover:border-black transition-opacity duration-300"
           >
