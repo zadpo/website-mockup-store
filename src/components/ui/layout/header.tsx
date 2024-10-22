@@ -45,7 +45,7 @@ export default function Header() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="text-3xl font-bold font-gradualBold">
-              GOODWOOD
+              GOODMOOD
             </Link>
             <div className="md:hidden">
               <button onClick={toggleMenu} className="p-2" aria-label="Toggle menu">
